@@ -25,8 +25,6 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    //ненавижу swing, гори в аду
-
     private JPanel panel;
     private JComboBox<String> lightColorSchemes;
     private JComboBox<String> darkColorSchemes;
@@ -74,11 +72,6 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
     }
 
     @Override
-    public void disposeUIResources() {
-
-    }
-
-    @Override
     public boolean isModified() {
         return modified;
     }
@@ -114,7 +107,7 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
             settings.endDarkMinutes = end.get(ChronoField.MINUTE_OF_HOUR);
 
         } catch (DateTimeParseException ex) {
-            throw new ConfigurationException(ex.getMessage(), ex, "Invalid date time specified");
+            throw new ConfigurationException(ex.getMessage(), ex, "Invalid time specified!");
         }
 
     }

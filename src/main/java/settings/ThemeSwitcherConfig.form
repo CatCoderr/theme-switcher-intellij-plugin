@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="settings.ThemeSwitcherConfig">
   <grid id="27dc6" binding="panel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="102" y="24" width="365" height="234"/>
+      <xy x="91" y="58" width="332" height="81"/>
     </constraints>
     <properties>
       <enabled value="false"/>
@@ -15,7 +15,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Light color scheme"/>
+          <text value="Light color scheme:"/>
         </properties>
       </component>
       <component id="877bb" class="javax.swing.JComboBox" binding="lightColorSchemes">
@@ -42,7 +42,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Dark theme period"/>
+          <text value="Dark theme period:"/>
         </properties>
       </component>
       <component id="87a81" class="javax.swing.JLabel">
@@ -51,7 +51,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
-          <text value="Dark color scheme"/>
+          <text value="Dark color scheme:"/>
           <toolTipText value="Specify dark theme name"/>
         </properties>
       </component>
