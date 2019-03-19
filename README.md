@@ -5,7 +5,7 @@ Download: https://plugins.jetbrains.com/plugin/12119-themeswitcher
 ## How to configure time?
 The configuration of dark theme period is located at: **Settings -> Other Settings -> Theme Switcher Settings**
 
-##Configuration structure
+## Configuration structure
 
 ![Image of Yaktocat](/assets/screenshot.png)
 
