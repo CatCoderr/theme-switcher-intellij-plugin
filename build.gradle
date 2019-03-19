@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url 'https://dl.bintray.com/jetbrains/intellij-plugin-service'
+        }
+
+    }
+    dependencies {
+        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.5.0-SNAPSHOT"
+    }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+sourceSets {
+    main {
+        java.srcDirs 'src/main/java', 'generated/src'
+        resources.srcDirs 'src/main/resources', 'generated/resources'
+    }
+    test {
+        java.srcDir 'test/java'
+        resources.srcDirs 'test/resources', 'testData'
+    }
+}
+
+intellij {
+    pluginName = 'theme-switcher-plugin'
+    localPath = '/Applications/IntelliJ IDEA.app'
+    updateSinceUntilBuild true
+    sameSinceUntilBuild false
+}
+
+patchPluginXml {
+    pluginXmlFiles = ['src/main/resources/META-INF/plugin.xml']
+}

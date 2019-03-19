@@ -1,0 +1,23 @@
+<idea-plugin>
+  <id>me.catcoder.themeswitcher</id>
+  <name>ThemeSwitcher</name>
+  <version>1.0</version>
+  <vendor email="catcoderr@gmail.com" url="https://vk.com/catcoder">CatCoder</vendor>
+
+  <description><![CDATA[
+      Switch theme between Darcula and Default depending by time of day<br>
+    ]]></description>
+
+  <idea-version since-build="173.0"/>
+
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+    <postStartupActivity implementation="ThemeSwitcherApplication"/>
+    <applicationService serviceImplementation="settings.ThemeSwitcherSettings"/>
+    <applicationConfigurable instance="settings.ThemeSwitcherConfig"/>
+
+  </extensions>
+
+
+</idea-plugin>
