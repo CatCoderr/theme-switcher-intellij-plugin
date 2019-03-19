@@ -84,8 +84,8 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
             application.invokeLater(() -> {
                 boolean useDarkMode = (end.equals(start)) || end.getHour() < start.getHour() ? WITH_NEXT_DAY.test(start, end) : WITH_CURRENT_DAY.test(start, end);
 
-                if (settings.followMacOsDarkMode && macOSDarkMode.isDarkModeEnabled()) {
-                    useDarkMode = true;
+                if (settings.followMacOsDarkMode) {
+                    useDarkMode = macOSDarkMode.isDarkModeEnabled();
                 }
 
                 UIManager.LookAndFeelInfo info = useDarkMode ? new DarculaLookAndFeelInfo() : new IntelliJLookAndFeelInfo();
