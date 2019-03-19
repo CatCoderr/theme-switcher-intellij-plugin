@@ -6,12 +6,14 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.Scheme;
 import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.util.SystemInfo;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import settings.ThemeSwitcherSettings;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -30,6 +32,7 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
     private JComboBox<String> darkColorSchemes;
     private JTextField startDarkField;
     private JTextField endDarkField;
+    private JCheckBox followDarkMode;
 
     private ThemeSwitcherSettings settings = ServiceManager.getService(ThemeSwitcherSettings.class);
     private EditorColorsManager colorsManager = EditorColorsManager.getInstance();
@@ -50,7 +53,6 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
     @Nullable
     @Override
     public JComponent createComponent() {
-
         Vector<String> supportedSchemes =
                 Arrays.stream(colorsManager.getAllSchemes())
                         .map(Scheme::getName)
@@ -67,6 +69,14 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
         startDarkField.addActionListener((event) -> modified = true);
         endDarkField.addActionListener((event) -> modified = true);
 
+        followDarkMode.setEnabled(SystemInfo.isMacOSMojave);
+
+        followDarkMode.addActionListener((event) -> modified = true);
+
+        followDarkMode.addItemListener(e -> {
+            startDarkField.setEnabled(!followDarkMode.isSelected());
+            endDarkField.setEnabled(!followDarkMode.isSelected());
+        });
 
         return panel;
     }
@@ -89,12 +99,20 @@ public class ThemeSwitcherConfig implements SearchableConfigurable, Configurable
                 .with(ChronoField.HOUR_OF_DAY, settings.endDarkHour)
                 .with(ChronoField.MINUTE_OF_HOUR, settings.endDarkMinutes)
                 .format(DATE_TIME_FORMATTER));
+
+        followDarkMode.setSelected(settings.followMacOsDarkMode);
+
+        startDarkField.setEnabled(!followDarkMode.isSelected());
+        endDarkField.setEnabled(!followDarkMode.isSelected());
+
+
     }
 
     @Override
     public void apply() throws ConfigurationException {
         settings.lightColorScheme = (String) lightColorSchemes.getSelectedItem();
         settings.darkColorScheme = (String) darkColorSchemes.getSelectedItem();
+        settings.followMacOsDarkMode = followDarkMode.isSelected();
 
         try {
             TemporalAccessor start = DATE_TIME_FORMATTER.parse(startDarkField.getText());

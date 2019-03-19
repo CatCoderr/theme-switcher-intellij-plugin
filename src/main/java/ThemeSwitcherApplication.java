@@ -10,12 +10,18 @@ import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import settings.ThemeSwitcherSettings;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
@@ -52,9 +58,16 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
         return time.isAfter(start) && time.isBefore(end);
     };
 
+    private MacOSDarkMode macOSDarkMode;
 
     @Override
     public void runActivity(@NotNull Project project) {
+        if (SystemInfo.isMacOSMojave) {
+            copyAndLoadNative("/native/MacOSDarkModeImpl.m.dylib");
+
+            macOSDarkMode = new MacOSDarkMode();
+        }
+
         ScheduledExecutorService executor = AppExecutorUtil.getAppScheduledExecutorService();
 
         executor.scheduleWithFixedDelay(createUpdateTask(), UPDATE_INTERVAL_MS, UPDATE_INTERVAL_MS, TimeUnit.MILLISECONDS);
@@ -69,9 +82,11 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
             LocalTime end = settings.getEndDarkTime();
 
             application.invokeLater(() -> {
-                boolean useDarkMode = (end.equals(start))
-                        || end.getHour() < start.getHour() ?
-                        WITH_NEXT_DAY.test(start, end) : WITH_CURRENT_DAY.test(start, end);
+                boolean useDarkMode = (end.equals(start)) || end.getHour() < start.getHour() ? WITH_NEXT_DAY.test(start, end) : WITH_CURRENT_DAY.test(start, end);
+
+                if (settings.followMacOsDarkMode && macOSDarkMode.isDarkModeEnabled()) {
+                    useDarkMode = true;
+                }
 
                 UIManager.LookAndFeelInfo info = useDarkMode ? new DarculaLookAndFeelInfo() : new IntelliJLookAndFeelInfo();
 
@@ -79,14 +94,35 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
 
                 EditorColorsManager manager = EditorColorsManager.getInstance();
 
-                SwingUtilities.invokeLater(() -> {
-                    applyLaf(info);
+                manager.setGlobalScheme(manager.getScheme(useDarkMode ? settings.darkColorScheme : settings.lightColorScheme));
 
-                    manager.setGlobalScheme(manager.getScheme(useDarkMode ? settings.darkColorScheme : settings.lightColorScheme));
-                });
+                SwingUtilities.invokeLater(() -> applyLaf(info));
 
             });
         };
+    }
+
+    private static void copyAndLoadNative(String path) {
+        try {
+            Path tempFile = Files
+                    .createTempFile("native-", path.substring(path.lastIndexOf('.')));
+            InputStream nativeLib = ThemeSwitcherApplication.class.getResourceAsStream(path);
+            if (nativeLib == null) {
+                throw new IllegalStateException("Native library " + path + " not found.");
+            }
+
+            Files.copy(nativeLib, tempFile, StandardCopyOption.REPLACE_EXISTING);
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    Files.deleteIfExists(tempFile);
+                } catch (IOException ignored) {
+                    // Well, it doesn't matter...
+                }
+            }));
+            System.load(tempFile.toAbsolutePath().toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to copy natives", e);
+        }
     }
 
     private static void applyLaf(UIManager.LookAndFeelInfo info) {
@@ -109,4 +145,5 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
             throw new RuntimeException(e);
         }
     }
+
 }

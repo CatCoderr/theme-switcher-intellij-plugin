@@ -26,6 +26,9 @@ public class ThemeSwitcherSettings implements PersistentStateComponent<ThemeSwit
     public String lightColorScheme;
     public String darkColorScheme;
 
+    //feature only available for MacOS Mojave
+    public boolean followMacOsDarkMode;
+
     public ThemeSwitcherSettings(){
         EditorColorsManager manager = EditorColorsManager.getInstance();
 
@@ -41,7 +44,6 @@ public class ThemeSwitcherSettings implements PersistentStateComponent<ThemeSwit
     public LocalTime getEndDarkTime() {
         return LocalTime.of(endDarkHour, endDarkMinutes);
     }
-
 
     @Nullable
     @Override
