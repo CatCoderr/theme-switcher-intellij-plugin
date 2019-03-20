@@ -1,5 +1,6 @@
 # Theme Switcher for IntellijIDEA
-Switch theme between Darcula and Default depending by time of day
+Switch theme between Darcula and Default depending by time of day.
+Plugin is ❤️ MacOS Mojave's dark mode.
 
 Download: https://plugins.jetbrains.com/plugin/12119-themeswitcher
 
