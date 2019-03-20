@@ -1,14 +1,10 @@
-#import "MacOSDarkMode.h"
+#import "me_catcoder_themeswitcher_plugin_mac_MacOSDarkMode.h"
 #import <Foundation/Foundation.h>
 
-BOOL isDarkMode() {
-    NSString *osxMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"];
+JNIEXPORT jboolean JNICALL Java_me_catcoder_themeswitcher_plugin_mac_MacOSDarkMode_isDarkModeEnabled
+  (JNIEnv * env, jclass clazz){
 
-    return osxMode != nil;
-}
+     NSString *osxMode = [[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"];
 
-JNIEXPORT jboolean JNICALL Java_MacOSDarkMode_isDarkModeEnabled
-   (JNIEnv *env , jobject obj) {
-
-   return isDarkMode();
+     return osxMode != nil;
 }

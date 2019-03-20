@@ -28,6 +28,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package me.catcoder.themeswitcher.plugin;
+
 import com.intellij.ide.WelcomeWizardUtil;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.laf.IntelliJLookAndFeelInfo;
@@ -43,8 +45,9 @@ import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.concurrency.AppExecutorUtil;
 import com.intellij.util.ui.UIUtil;
+import me.catcoder.themeswitcher.plugin.mac.MacOSDarkMode;
 import org.jetbrains.annotations.NotNull;
-import settings.ThemeSwitcherSettings;
+import me.catcoder.themeswitcher.plugin.settings.ThemeSwitcherSettings;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -88,14 +91,10 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
         return time.isAfter(start) && time.isBefore(end);
     };
 
-    private MacOSDarkMode macOSDarkMode;
-
     @Override
     public void runActivity(@NotNull Project project) {
         if (SystemInfo.isMacOSMojave) {
             copyAndLoadNative("/native/MacOSDarkModeImpl.m.dylib");
-
-            macOSDarkMode = new MacOSDarkMode();
         }
 
         ScheduledExecutorService executor = AppExecutorUtil.getAppScheduledExecutorService();
@@ -114,8 +113,8 @@ public class ThemeSwitcherApplication implements StartupActivity, DumbAware {
             application.invokeLater(() -> {
                 boolean useDarkMode = (end.equals(start)) || end.getHour() < start.getHour() ? WITH_NEXT_DAY.test(start, end) : WITH_CURRENT_DAY.test(start, end);
 
-                if (settings.followMacOsDarkMode) {
-                    useDarkMode = macOSDarkMode.isDarkModeEnabled();
+                if (settings.followMacOsDarkMode && SystemInfo.isMacOSMojave) {
+                    useDarkMode = MacOSDarkMode.isDarkModeEnabled();
                 }
 
                 UIManager.LookAndFeelInfo info = useDarkMode ? new DarculaLookAndFeelInfo() : new IntelliJLookAndFeelInfo();

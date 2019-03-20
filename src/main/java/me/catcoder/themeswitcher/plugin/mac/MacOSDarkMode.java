@@ -28,8 +28,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package me.catcoder.themeswitcher.plugin.mac;
+
 public class MacOSDarkMode {
 
-    public native boolean isDarkModeEnabled();
+    private MacOSDarkMode() {
+        throw new AssertionError("This class cannot be initialized.");
+    }
+
+    public static native boolean isDarkModeEnabled();
 
 }

@@ -90,6 +90,3 @@ atlassian-ide-plugin.xml
 
 # oh-my-zsh gradle plugin
 .gradletasknamecache
-
-/proxy-worker/build
-/telegram-bot/build

@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>me.catcoder.themeswitcher</id>
   <name>ThemeSwitcher</name>
-  <version>1.1</version>
+  <version>0.0</version>
   <vendor email="catcoderr@gmail.com" url="https://vk.com/catcoder">CatCoder</vendor>
 
   <description><![CDATA[
@@ -10,12 +10,11 @@
 
   <idea-version since-build="173.0"/>
 
-
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <postStartupActivity implementation="ThemeSwitcherApplication"/>
-    <applicationService serviceImplementation="settings.ThemeSwitcherSettings"/>
-    <applicationConfigurable instance="settings.ThemeSwitcherConfig"/>
+    <postStartupActivity implementation="me.catcoder.themeswitcher.plugin.ThemeSwitcherApplication"/>
+    <applicationService serviceImplementation="me.catcoder.themeswitcher.plugin.settings.ThemeSwitcherSettings"/>
+    <applicationConfigurable instance="me.catcoder.themeswitcher.plugin.settings.ThemeSwitcherConfig"/>
 
   </extensions>
 
