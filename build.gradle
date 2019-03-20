@@ -14,13 +14,17 @@ buildscript {
     }
 }
 
+plugins {
+    id 'net.minecrell.licenser' version '0.4.1'
+}
+
 
 apply plugin: 'java'
 apply plugin: 'org.jetbrains.intellij'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
-version = '1.1-SNAPSHOT'
+version = '1.2-SNAPSHOT'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -44,6 +48,15 @@ intellij {
     updateSinceUntilBuild true
     sameSinceUntilBuild false
 }
+
+license {
+    header = project.file('LICENSE')
+    ext {
+        year = 2019
+    }
+    exclude '**/*.xml' // Apply license header NOT to xml (e.g plugin.xml) files
+}
+
 
 patchPluginXml {
     pluginXmlFiles = ['src/main/resources/META-INF/plugin.xml']
