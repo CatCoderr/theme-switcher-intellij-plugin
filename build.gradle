@@ -50,7 +50,7 @@ intellij {
 }
 
 license {
-    header = project.file('LICENSE')
+    header = project.file('HEADER')
     ext {
         year = 2019
     }
